@@ -1,16 +1,15 @@
 import cv2
 import math
 import random
+import time
 from cvzone.HandTrackingModule import HandDetector
 
-# Properties
 wCam, hCam = 1280, 720
 frameR = 144
 smoothening = 1
 target_radius = 40
 hand_radius = 40  
 border_size = 15 
-
 
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, wCam) 
@@ -99,6 +98,6 @@ while True:
     if hit_target:
         target = create_random_target(target.coordinates)
 
+    cv2.namedWindow("Image", cv2.WND_PROP_FULLSCREEN)
     cv2.imshow("Image", img)
-
     cv2.waitKey(1)
