@@ -4,6 +4,9 @@ import autopy
 import numpy as np
 import time
 import cvzone
+import pynput
+from pynput.keyboard import Key, Controller as KeyboardController
+from pynput.mouse import Button, Controller as MouseController
 
 ##############################
 wCam, hCam = 1280, 720
@@ -21,6 +24,9 @@ detector = htm.handDetector()
 wScr, hScr = autopy.screen.size()
 # print(wScr, hScr)
 
+Keyboard = KeyboardController()
+Mouse = MouseController()
+
 while True:
     success, img = cap.read()
     # 1. 检测手部 得到手指关键点坐标
@@ -30,11 +36,11 @@ while True:
 
     # 2. 判断食指和中指是否伸出
     if len(lmList) != 0:
-        x1, y1 = lmList[20][1:]
+        x1, y1 = lmList[8][1:]
         fingers = detector.fingersUp()
 
         # 3. 若只有食指伸出 则进入移动模式
-        if fingers[0] and fingers[1] and fingers[2] and fingers[3] and fingers[4] == True:
+        if (fingers[1] == True) and (fingers[0] == False) and (fingers[2] == False) and (fingers[3] == False) and (fingers[4] == False):
             # 4. 坐标转换： 将食指在窗口坐标转换为鼠标在桌面的坐标
             # 鼠标坐标
             x3 = np.interp(x1, (frameR, wCam - frameR), (0, wScr))
@@ -50,7 +56,7 @@ while True:
                 plocX, plocY = clocX, clocY
 
         # 5. 若是食指和中指都伸出 则检测指头距离 距离够短则对应鼠标点击'NoneType' object has no attribute 'Label'
-        if fingers[0] and fingers[1] and fingers[2] and fingers[3] and fingers[4] == True:
+        if (fingers[1] and fingers[2] == True) and (fingers[0] == False) and (fingers[3] == False) and (fingers[4] == False):
             length, img, pointInfo = detector.findDistance(8, 12, img)
             if length < 40:
                 cv2.circle(img, (pointInfo[4], pointInfo[5]),
@@ -58,11 +64,43 @@ while True:
                 autopy.mouse.click()
 
         if fingers[0] and fingers[1] and fingers[2] and fingers[3] and fingers[4] == True:
-            length, img, pointInfo = detector.findDistance(12, 16, img)
-            if length < 40:
-                cv2.circle(img, (pointInfo[4], pointInfo[5]),
-                           15, (0, 255, 0), cv2.FILLED)
-                autopy.mouse.click(autopy.mouse.Button.RIGHT)
+            print("release")
+            Keyboard.release('d')
+            Keyboard.release('f')
+            Keyboard.release('j')
+            Keyboard.release('k')
+
+        #Spider-D
+        if (fingers[0] and fingers[1] and fingers[4] == True) and (fingers[2] == False) and (fingers[3] == False):
+            #autopy.key.tap('d')
+            Keyboard.press('d')
+            print("Spider - d")
+
+        #Gun-F
+        if (fingers[0] and fingers[1] and fingers[2] == True) and (fingers[3] == False) and (fingers[4] == False):
+            #autopy.key.tap('f')
+            Keyboard.press('f')
+            print("Gun - f")
+
+        #Phone-J
+        if (fingers[0] and fingers[4] == True) and (fingers[1] == False) and (fingers[2] == False) and (fingers[3] == False):
+            #autopy.key.tap('j')
+            Keyboard.press('j')
+            print("Phone - j")
+
+        #Trident-K
+        if (fingers[1] and fingers[2] and fingers[3] == True) and (fingers[4] == False) and (fingers[0] == False):
+            #autopy.key.tap('k')
+            Keyboard.press('k')
+
+            print("Trident - k")
+
+        if(fingers[2] == True) and (fingers[0] == False) and (fingers[1] == False) and (fingers[3] == False) and (fingers[4] == False):
+            Keyboard.press(Key.ctrl)
+            Keyboard.press(Key.f4)
+            Keyboard.release(Key.ctrl)
+            Keyboard.release(Key.f4)
+            break;
 
     cTime = time.time()
     fps = 1 / (cTime - pTime)
