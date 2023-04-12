@@ -8,29 +8,63 @@ Dependency: https://search.maven.org/artifact/com.github.sarxos/webcam-capture/0
  */
 
 
-import java.awt.Color;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
+import java.awt.*;
+import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-public class App 
+import javax.swing.JButton;
+import javax.swing.border.EmptyBorder;
+import org.example.MainMenu;
+public class App
 {
-    public static void main( String[] args )
-    { // fullscreen code explained here https://www.tutorialspoint.com/how-to-set-fullscreen-mode-for-java-swing-application
+    App(){
         GraphicsEnvironment graphics = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice device = graphics.getDefaultScreenDevice();
         JFrame frame = new JFrame("Fullscreen");
-        JPanel panel = new JPanel();
-        JLabel label = new JLabel("", JLabel.CENTER);
-        label.setText("This is in fullscreen mode!");
-        label.setOpaque(true);
-        frame.add(panel);
-        frame.add(label);
+        JPanel panel = new JPanel(new GridBagLayout());
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setUndecorated(true);
+        frame.setContentPane(panel);
+        JLabel label = new JLabel("", JLabel.CENTER);
+
+        // main menu navigation buttons
+        JButton exit = new JButton("Exit");
+        exit.addActionListener((event) -> System.exit(0));
+
+        JButton settings = new JButton("Settings");
+        settings.addActionListener((event) -> System.exit(0));
+
+        JButton play = new JButton("Play");
+        play.addActionListener((event) -> System.exit(0));
+
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(10, 0 ,10, 0);
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+
+        label.setText("World's Best Rhythm Game");
+        //label.setOpaque(true);
+        //frame.add(panel, gbc);
+        frame.add(label, gbc);
+
+        frame.add(play, gbc);
+        frame.add(settings, gbc);
+        frame.add(exit, gbc);
+
+
+        frame.pack();
+        frame.setVisible(true);
         frame.setResizable(false);
         device.setFullScreenWindow(frame);
+    }
+    public static void main( String[] args )
+    { // fullscreen code explained here https://www.tutorialspoint.com/how-to-set-fullscreen-mode-for-java-swing-application
+        new MainMenu();
 
     }
 }
+
+
+
