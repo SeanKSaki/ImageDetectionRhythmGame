@@ -2,6 +2,7 @@ import cv2
 import math
 import random
 import time
+import keyboard
 from cvzone.HandTrackingModule import HandDetector
 
 wCam, hCam = 1280, 720
@@ -36,6 +37,12 @@ class Circle:
         else:
             return False
 
+
+def hit_detection():
+    if keyboard.is_pressed('d'):
+        return True
+    else:
+        return False
 
 def create_random_target(current_target_pos=[]):
     if current_target_pos:
@@ -73,29 +80,19 @@ def create_random_target(current_target_pos=[]):
 
 target = create_random_target()
 is_playing = False
-fgbg = cv2.createBackgroundSubtractorMOG2()
 
 while True:
     success, img = cap.read()
     img = cv2.flip(img, 1)
     img = cv2.copyMakeBorder(img, border_size, border_size, border_size, border_size, cv2.BORDER_CONSTANT,
                                value=[0, 0, 0])
-    fmask = fgbg.apply(img)
     hit_target = False
     hands = detector.findHands(img, flipType=False, draw=False)
     target.draw(img)
 
-    if hands:
-        for i in range(len(hands)):
-            hand_position = hands[i]["center"]
-            hand_circle = Circle(hand_position, hand_radius, (0, 0, 255), 1)
+    if hit_detection():
+        hit_target = True
 
-            if target.check_intersection(hand_circle.coordinates, hand_circle.radius):
-                hand_circle.color = (0,255,0)
-                hit_target = True
-            else:
-                hand_circle.color = (0,0,255)
-            hand_circle.draw(img)
     if hit_target:
         target = create_random_target(target.coordinates)
 
