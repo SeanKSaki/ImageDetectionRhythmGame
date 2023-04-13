@@ -73,13 +73,14 @@ def create_random_target(current_target_pos=[]):
 
 target = create_random_target()
 is_playing = False
+fgbg = cv2.createBackgroundSubtractorMOG2()
 
 while True:
     success, img = cap.read()
     img = cv2.flip(img, 1)
     img = cv2.copyMakeBorder(img, border_size, border_size, border_size, border_size, cv2.BORDER_CONSTANT,
                                value=[0, 0, 0])
-
+    fmask = fgbg.apply(img)
     hit_target = False
     hands = detector.findHands(img, flipType=False, draw=False)
     target.draw(img)
