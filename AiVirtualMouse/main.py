@@ -2,6 +2,7 @@ import cv2
 import math
 import random
 import time
+import mediapipe as mp
 from cvzone.HandTrackingModule import HandDetector
 
 wCam, hCam = 1280, 720
@@ -14,7 +15,10 @@ border_size = 15
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, wCam) 
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, hCam)  
-detector = HandDetector(detectionCon=0.8, maxHands=2)
+detector = HandDetector(detectionCon=0.7, maxHands=2)
+mpHands = mp.solutions.hands
+hands = mpHands.Hands()
+mpDraw = mp.solutions.drawing_utils
 
 class Circle:
 
@@ -72,21 +76,54 @@ def create_random_target(current_target_pos=[]):
 
 
 target = create_random_target()
-is_playing = False
 
 while True:
+    font = cv2.FONT_HERSHEY_SIMPLEX
     success, img = cap.read()
+    handsFrame = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    results = hands.process(handsFrame)
     img = cv2.flip(img, 1)
     img = cv2.copyMakeBorder(img, border_size, border_size, border_size, border_size, cv2.BORDER_CONSTANT,
                                value=[0, 0, 0])
 
     hit_target = False
-    hands = detector.findHands(img, flipType=False, draw=False)
+    hand_detect = detector.findHands(img, flipType=False, draw=False)
     target.draw(img)
-
-    if hands:
-        for i in range(len(hands)):
-            hand_position = hands[i]["center"]
+    fist = False
+    
+    if results.multi_hand_landmarks:
+                for handLMS in results.multi_hand_landmarks:
+                    lmList = []
+                    for id, lm in enumerate(handLMS.landmark):
+                        h, w, c = handsFrame.shape
+                        cx, cy = int(lm.x * w), int(lm.y * h)
+                        lmList.append([id, cx, cy])
+                    indexX = 0
+                    indexY = 0
+                    indexMid = 0
+                    handBottomX = 0
+                    handBottomY = 0
+                    pinkyX = 0
+                    pinkyY = 0
+                    fistWarning = "Fist!"
+                    for lms in lmList:
+                        if lms[0] == 7:
+                            indexX, indexY = lms[1], lms[2]
+                        elif lms[0] == 5:
+                            indexMid = lms[2]
+                        elif lms[0] == 19:
+                            pinkyX, pinkyY = lms[1], lms[2]
+                        elif lms[0] == 0:
+                            handBottomX, handBottomY = lms[1], lms[2]
+                    if (indexY < handBottomY) and (indexY > indexMid):
+                        cv2.rectangle(handsFrame, (indexX, indexY), (pinkyX, handBottomY), (0, 0, 255), 2)
+                        cv2.putText(handsFrame, fistWarning, (pinkyX + 2, indexY - 2), (font), .7,
+                                    (0, 0, 255), 1, cv2.LINE_4)
+                        fist = True
+                        
+    if hand_detect:
+        for i in range(len(hand_detect)):
+            hand_position = hand_detect[i]["center"]
             hand_circle = Circle(hand_position, hand_radius, (0, 0, 255), 1)
 
             if target.check_intersection(hand_circle.coordinates, hand_circle.radius):
@@ -95,9 +132,11 @@ while True:
             else:
                 hand_circle.color = (0,0,255)
             hand_circle.draw(img)
-    if hit_target:
+            
+    if hit_target and fist:
         target = create_random_target(target.coordinates)
 
     cv2.namedWindow("Image", cv2.WND_PROP_FULLSCREEN)
+    cv2.setWindowProperty("Image", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
     cv2.imshow("Image", img)
     cv2.waitKey(1)
