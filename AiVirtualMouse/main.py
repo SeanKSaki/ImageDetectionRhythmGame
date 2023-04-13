@@ -3,6 +3,7 @@ import math
 import random
 import time
 import keyboard
+import tkinter
 from cvzone.HandTrackingModule import HandDetector
 
 wCam, hCam = 1280, 720
@@ -77,25 +78,47 @@ def create_random_target(current_target_pos=[]):
 
     return _target
 
+def generate_target(_canvas, _window):
+    r = 60
+    width = _window.winfo_screenwidth()
+    height = _window.winfo_screenheight()
+    x = random.randint(0, width)
+    y = random.randint(0, height)
+    return _canvas.create_oval(x-r, y-r, x+r, y+r)
 
-target = create_random_target()
+#target = create_random_target()
 is_playing = False
 
+window = tkinter.Tk()
+window.title("Game Screen")
+window.attributes('-fullscreen', True)
+c = tkinter.Canvas(window, bg='white', highlightthickness=0)
+c.pack(fill=tkinter.BOTH, expand=True)
+#target = generate_target(c, window)
+first = True
 while True:
-    success, img = cap.read()
-    img = cv2.flip(img, 1)
-    img = cv2.copyMakeBorder(img, border_size, border_size, border_size, border_size, cv2.BORDER_CONSTANT,
-                               value=[0, 0, 0])
     hit_target = False
-    hands = detector.findHands(img, flipType=False, draw=False)
-    target.draw(img)
 
+    r = 60
+    width = window.winfo_screenwidth()
+    height = window.winfo_screenheight()
+    x = random.randrange(0, width)
+    y = random.randrange(0, height)
+    if first:
+        target = c.create_oval(x-r, y-r, x+r, y+r, fill='red')
+        first = False
+
+
+
+    window.update_idletasks()
+    window.update()
+
+    print(x)
     if hit_detection():
         hit_target = True
 
     if hit_target:
-        target = create_random_target(target.coordinates)
+        c.delete(target)
+        target = c.create_oval(x-r, y-r, x+r, y+r, fill='red')
 
-    cv2.namedWindow("Image", cv2.WND_PROP_FULLSCREEN)
-    cv2.imshow("Image", img)
-    cv2.waitKey(1)
+    #time.sleep(0.05)
