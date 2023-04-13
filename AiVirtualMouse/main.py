@@ -40,7 +40,13 @@ class Circle:
 
 
 def hit_detection():
-    if keyboard.is_pressed('d'):
+    if keyboard.is_pressed('d') and state == 0:
+        return True
+    elif keyboard.is_pressed('f') and state == 1:
+        return True
+    elif keyboard.is_pressed('j') and state == 2:
+        return True
+    elif keyboard.is_pressed('k') and state == 3:
         return True
     else:
         return False
@@ -96,6 +102,8 @@ c = tkinter.Canvas(window, bg='white', highlightthickness=0)
 c.pack(fill=tkinter.BOTH, expand=True)
 #target = generate_target(c, window)
 first = True
+state = 0;
+colors = ['red', 'blue', 'green', 'yellow']
 while True:
     hit_target = False
 
@@ -113,12 +121,18 @@ while True:
     window.update_idletasks()
     window.update()
 
-    print(x)
     if hit_detection():
         hit_target = True
 
     if hit_target:
         c.delete(target)
-        target = c.create_oval(x-r, y-r, x+r, y+r, fill='red')
+        temp = random.randrange(0, 4)
+        if temp == state:
+            temp = temp + 1
+            if temp == 4:
+                temp = 0
+        state = temp
+        target = c.create_oval(x-r, y-r, x+r, y+r, fill=colors[state])
+        time.sleep(.06)
 
     #time.sleep(0.05)
