@@ -133,6 +133,5 @@ while True:
                 temp = 0
         state = temp
         target = c.create_oval(x-r, y-r, x+r, y+r, fill=colors[state])
-        time.sleep(.06)
 
     #time.sleep(0.05)
