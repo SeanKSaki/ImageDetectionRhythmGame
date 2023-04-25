@@ -64,6 +64,12 @@ state = 0;
 colors = ['red', 'blue', 'green', 'yellow']
 c.create_line(100,0,100,1080, fill="green", width=5)
 c.create_line(220,0,220,1080, fill="green", width=5)
+c.create_line(0, 300, 1920, 300, fill="black", width = 5)
+c.create_line(0, 420, 1920, 420, fill="black", width = 5)
+c.create_line(0, 540, 1920, 540, fill="black", width = 5)
+c.create_line(0, 660, 1920, 660, fill="black", width = 5)
+c.create_line(0, 780, 1920, 780, fill="black", width = 5)
+
 Text1 = c.create_text(960, 200, text = 'COMBO: 0', fill="black", font=('Helvetica 15 bold'))
 combo = 0
 while True:
@@ -79,13 +85,13 @@ while True:
     #y = random.randrange(0, height)
     y = 540
     if first:
-        target = c.create_oval(x-r, y-r, x+r, y+r, fill='red')
+        target = c.create_oval(x-r, y-r+(3*r), x+r, y+r+(3*r), fill='red')
         first = False
 
     window.update_idletasks()
     window.update()
 
-    c.move(target, -0.2, 0)
+    c.move(target, -0.4, 0)
     print(c.coords(target))
     if c.coords(target)[0] <= 0:
         c.delete(Text1)
@@ -102,12 +108,20 @@ while True:
 
     if hit_target or miss_target:
         c.delete(target)
+
         temp = random.randrange(0, 4)
         if temp == state:
             temp = temp + 1
             if temp == 4:
                 temp = 0
         state = temp
-        target = c.create_oval(x-r, y-r, x+r, y+r, fill=colors[state])
+        if state == 0:
+            target = c.create_oval(x-r, y-r+(3*r), x+r, y+r+(3*r), fill=colors[state])
+        elif state == 1:
+            target = c.create_oval(x-r, y-r+(1*r), x+r, y+r+(1*r), fill=colors[state])
+        elif state == 2:
+            target = c.create_oval(x-r, y-r+(-1*r), x+r, y+r+(-1*r), fill=colors[state])
+        elif state == 3:
+            target = c.create_oval(x-r, y-r+(-3*r), x+r, y+r+(-3*r), fill=colors[state])
 
-    #time.sleep(0.05)
+    #time.sleep(0.5)
