@@ -1,0 +1,34 @@
+﻿I'm sorry, but an uncaught exception occurred.
+
+While running game code:
+  File "game/script.rpy", line 36, in script call
+    call rhythm_game_entry_label from _call_rhythm_game_entry_label
+  File "game/00-renpythm/rhythm_game_displayable.rpy", line 28, in script
+    $ rhythm_game_displayable = RhythmGameDisplayable(selected_song)
+  File "game/00-renpythm/rhythm_game_displayable.rpy", line 28, in <module>
+    $ rhythm_game_displayable = RhythmGameDisplayable(selected_song)
+  File "game/00-renpythm/rhythm_game_displayable.rpy", line 287, in __init__
+    pygame.K_D: 1,
+AttributeError: module 'pygame_sdl2' has no attribute 'K_D'
+
+-- Full Traceback ------------------------------------------------------------
+
+Full traceback:
+  File "game/script.rpy", line 36, in script call
+    call rhythm_game_entry_label from _call_rhythm_game_entry_label
+  File "game/00-renpythm/rhythm_game_displayable.rpy", line 28, in script
+    $ rhythm_game_displayable = RhythmGameDisplayable(selected_song)
+  File "D:\Programming\renpy-8.0.3-sdk\renpy\ast.py", line 1131, in execute
+    renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
+  File "D:\Programming\renpy-8.0.3-sdk\renpy\python.py", line 1061, in py_exec_bytecode
+    exec(bytecode, globals, locals)
+  File "game/00-renpythm/rhythm_game_displayable.rpy", line 28, in <module>
+    $ rhythm_game_displayable = RhythmGameDisplayable(selected_song)
+  File "game/00-renpythm/rhythm_game_displayable.rpy", line 287, in __init__
+    pygame.K_D: 1,
+AttributeError: module 'pygame_sdl2' has no attribute 'K_D'
+
+Windows-10-10.0.22621 AMD64
+Ren'Py 8.0.3.22090809
+Image Detection Rhythm 1.0
+Wed Apr 26 02:04:34 2023

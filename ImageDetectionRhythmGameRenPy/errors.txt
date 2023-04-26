@@ -1,0 +1,14 @@
+﻿I'm sorry, but errors were detected in your script. Please correct the
+errors listed below, and try again.
+
+
+File "game/00-renpythm/rhythm_game_displayable.rpy", line 189: invalid syntax
+(Perhaps you left out a " at the end of the first line.)
+            """
+                song (Song object)
+         ^
+                """x_offset
+    
+
+Ren'Py Version: Ren'Py 8.0.3.22090809
+Tue Apr 25 21:48:40 2023
