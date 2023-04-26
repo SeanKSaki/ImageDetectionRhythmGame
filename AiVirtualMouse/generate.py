@@ -12,7 +12,7 @@ def main():
     file_name_no_extension, _ = os.path.splitext(file_path)
     output_name = file_name_no_extension + '.beatmap.txt'
     with open(output_name, 'wt') as f:
-        f.write('\n'.join(['%.4f' % onset_time for onset_time in onset_times]))
+        f.write('\n'.join(['%0.5f' % onset_time for onset_time in onset_times]))
 
 if __name__ == '__main__':
     main()

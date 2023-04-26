@@ -2,10 +2,16 @@ import os
 import random
 import keyboard
 import tkinter
+import math
 from time import perf_counter
+from playsound import playsound
+from threading import Thread
 
 beatmap_path = 'audio/music.beatmap.txt'
 
+def play_music():
+    playsound('./audio/music.mp3')
+    
 def read_beatmap_file(beatmap_path):
     beatmap_path_full = os.path.join(beatmap_path)
     with open(beatmap_path_full, 'rt') as f:
@@ -41,12 +47,6 @@ num_notes = len(onset_times)
 random_track_indices = [
         random.randint(0, 3) for _ in range(num_notes)
         ]
-active_notes_per_track = {
-            track_idx: [] for track_idx in range(3)
-            }
-onset_hits = {
-            onset: False for onset in onset_times
-            }
 
 is_playing = False
 window = tkinter.Tk()
@@ -69,12 +69,15 @@ c.create_line(0, 780, 1920, 780, fill="black", width = 5)
 Text1 = c.create_text(960, 200, text = 'COMBO: 0', fill="black", font=('Helvetica 15 bold'))
 combo = 0
 i = 0
+
+playsound('./audio/music.mp3', block=False)
+
 while True:
         
     hit_target = False
     miss_target = False
     timer = perf_counter()
-    current_time = "%.4f" % timer
+    current_time = "%.5f" % timer
     #print(current_time)
 
     r = 60
@@ -107,10 +110,27 @@ while True:
         Text1 = c.create_text(960, 200, text = string1, fill="black", font=('Helvetica 15 bold'))
         hit_target = True
 
+    for times in onset_times:
+        if math.isclose(times, float(current_time), abs_tol=0.000255):
+            temp = random.randrange(0, 4)
+            if temp == state:
+                temp = temp + 1
+                if temp == 4:
+                    temp = 0
+            state = temp
+            print(current_time) 
+            if state == 0:
+                target = c.create_oval(x-r, y-r+(3*r), x+r, y+r+(3*r), fill=colors[state])
+            elif state == 1:
+                target = c.create_oval(x-r, y-r+(1*r), x+r, y+r+(1*r), fill=colors[state])
+            elif state == 2:
+                target = c.create_oval(x-r, y-r+(-1*r), x+r, y+r+(-1*r), fill=colors[state])
+            elif state == 3:
+                target = c.create_oval(x-r, y-r+(-3*r), x+r, y+r+(-3*r), fill=colors[state])
         
     if hit_target or miss_target:
         c.delete(target) 
-        state = random_track_indices[i] 
+        """ state = random_track_indices[i] 
         i = i + 1
         if state == 0:
             target = c.create_oval(x-r, y-r+(3*r), x+r, y+r+(3*r), fill=colors[state])
@@ -119,7 +139,7 @@ while True:
         elif state == 2:
             target = c.create_oval(x-r, y-r+(-1*r), x+r, y+r+(-1*r), fill=colors[state])
         elif state == 3:
-            target = c.create_oval(x-r, y-r+(-3*r), x+r, y+r+(-3*r), fill=colors[state])
+            target = c.create_oval(x-r, y-r+(-3*r), x+r, y+r+(-3*r), fill=colors[state]) """
     
     if keyboard.is_pressed('esc'):
         print(onset_times)
