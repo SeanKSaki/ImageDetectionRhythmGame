@@ -13,7 +13,7 @@ wCam, hCam = 1280, 720
 frameR = 144
 smoothening = 1
 ##############################
-cap = cv2.VideoCapture(1)  # 若使用笔记本自带摄像头则编号为0  若使用外接摄像头 则更改为1或其他编号
+cap = cv2.VideoCapture(0)  # 若使用笔记本自带摄像头则编号为0  若使用外接摄像头 则更改为1或其他编号
 cap.set(3, wCam)
 cap.set(4, hCam)
 pTime = 0
