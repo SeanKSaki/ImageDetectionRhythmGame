@@ -8,13 +8,13 @@ define IMG_UP = THIS_PATH + IMG_DIR + 'up.png'
 define IMG_LEFT = THIS_PATH + IMG_DIR + 'left.png'
 define IMG_RIGHT = THIS_PATH + IMG_DIR + 'right.png'
 define IMG_DOWN = THIS_PATH + IMG_DIR + 'down.png'
+define IMG_BG = THIS_PATH + IMG_DIR + 'bg.jpg'
 
 # music channel for renpy.play
 define CHANNEL_RHYTHM_GAME = 'CHANNEL_RHYTHM_GAME'
 
 # scores for Good and Perfect hits
-define SCORE_GOOD = 60
-define SCORE_PERFECT = 100
+define SCORE_PERFECT = 200
 
 label rhythm_game_entry_label:
     $ selected_song = renpy.call_screen(_screen_name='select_song_screen', songs=rhythm_game_songs)
@@ -84,7 +84,7 @@ screen select_song_screen(songs):
                 hbox spacing 160:
                     label 'Song Name'
                     label 'Highest Score'
-                    label '% Perfect Hits'
+                    label '% Accuracy'
 
                 grid 3 len(songs):
                     xspacing 100
@@ -113,6 +113,14 @@ screen rhythm_game(rhythm_game_displayable):
 
     add Solid('#000')
     add rhythm_game_displayable
+
+    vbox:
+        xpos 0
+        ypos 0
+        showif rhythm_game_displayable.has_game_started:
+                text 'Image Designed by brgfx / Freepik':
+                    color '#fff'
+                    size 10
 
     vbox:
         xpos 50
@@ -171,7 +179,7 @@ init python:
         return onset_times
 
     class Song():
-        def __init__(self, name, audio_path, beatmap_path, beatmap_stride=8): # make a difficulty slider at some point && and scoring with combo
+        def __init__(self, name, audio_path, beatmap_path, beatmap_stride=5): # make a difficulty slider at some point && and scoring with combo
             # beatmap_stride (int): Default to 2. Use onset_times[::beatmap_stride] so that the tracks don't get too crowded. Can be used to set difficulty level
             self.name = name
             self.audio_path = audio_path
@@ -296,6 +304,8 @@ init python:
             self.track_bar_drawable = Solid('#fff', xsize=self.track_bar_width, ysize=self.track_bar_height)
             self.vertical_bar_drawable = Solid('#fff', xsize=self.vertical_bar_width, ysize=config.screen_height)
             # map track_idx to the note drawable
+            img_bg = im.Scale(IMG_BG, config.screen_width, config.screen_height)
+            self.bg_drawable = Image(img_bg)
             self.note_drawables = {
             0: Image(IMG_LEFT),
             1: Image(IMG_UP),
@@ -334,6 +344,7 @@ init python:
                 self.time_offset = self.silence_offset_start + st
 
             render = renpy.Render(width, height)
+            render.place(self.bg_drawable, x = 0, y = 0)
 
             # draw the countdown if we are still in the silent phase before the music starts
             # count down silence_offset_start, 3 seconds, while silence
@@ -481,7 +492,7 @@ init python:
                     if (-self.hit_threshold <= time_delta <= self.hit_threshold):
                         self.onset_hits[onset] = 'good'
                         self.combo = self.combo + 1
-                        self.score += SCORE_GOOD
+                        self.score += SCORE_PERFECT
                         # redraw immediately because now the note should disappear from screen
                         renpy.redraw(self, 0)
                         # refresh the screen

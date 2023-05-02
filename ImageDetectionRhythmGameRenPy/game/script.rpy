@@ -28,7 +28,8 @@ default persistent.rhythm_game_high_scores = {
 default selected_song = None
 
 label start:
-    scene bg room
+    scene bg room:
+        zoom 0.68
 
     e "Welcome to our image detection rhythm game!"
 

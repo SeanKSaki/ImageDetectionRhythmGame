@@ -2,13 +2,9 @@
 errors listed below, and try again.
 
 
-File "game/00-renpythm/rhythm_game_displayable.rpy", line 189: invalid syntax
-(Perhaps you left out a " at the end of the first line.)
-            """
-                song (Song object)
-         ^
-                """x_offset
-    
+File "game/script.rpy", line 32: Line is indented, but the preceding scene statement statement does not expect a block. Please check this line's indentation.
+    zoom 0.5
+    ^
 
 Ren'Py Version: Ren'Py 8.0.3.22090809
-Tue Apr 25 21:48:40 2023
+Mon May  1 18:01:18 2023
