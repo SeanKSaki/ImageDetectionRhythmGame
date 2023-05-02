@@ -179,7 +179,7 @@ init python:
         return onset_times
 
     class Song():
-        def __init__(self, name, audio_path, beatmap_path, beatmap_stride=5): # make a difficulty slider at some point && and scoring with combo
+        def __init__(self, name, audio_path, beatmap_path, beatmap_stride=3): # make a difficulty slider at some point && and scoring with combo
             # beatmap_stride (int): Default to 2. Use onset_times[::beatmap_stride] so that the tracks don't get too crowded. Can be used to set difficulty level
             self.name = name
             self.audio_path = audio_path
