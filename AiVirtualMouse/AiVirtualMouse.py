@@ -13,7 +13,7 @@ wCam, hCam = 1280, 720
 frameR = 144
 smoothening = 1
 ##############################
-cap = cv2.VideoCapture(0)  # 若使用笔记本自带摄像头则编号为0  若使用外接摄像头 则更改为1或其他编号
+cap = cv2.VideoCapture(1)
 cap.set(3, wCam)
 cap.set(4, hCam)
 pTime = 0
@@ -29,20 +29,24 @@ Mouse = MouseController()
 
 while True:
     success, img = cap.read()
-    # 1. 检测手部 得到手指关键点坐标
+
     img = detector.findHands(img)
     cv2.rectangle(img, (frameR, frameR), (wCam - frameR, hCam - frameR), (0, 255, 0), 2,  cv2.FONT_HERSHEY_PLAIN)
     lmList = detector.findPosition(img, draw=False)
 
-    # 2. 判断食指和中指是否伸出
+
     if len(lmList) != 0:
-        x1, y1 = lmList[8][1:]
+        x1, y1 = lmList[8][1:] ## index
+        fx1, fy1 = lmList[4][1:] ## thumb
+        fx3, fy3 = lmList[12][1:] ## middle
+        fx4, fy4 = lmList[16][1:]  ## ring
+        fx5, fy5 = lmList[20][1:]  ## pinky
         fingers = detector.fingersUp()
 
-        # 3. 若只有食指伸出 则进入移动模式
+        ## only index finger up
         if (fingers[1] == True) and (fingers[0] == False) and (fingers[2] == False) and (fingers[3] == False) and (fingers[4] == False):
-            # 4. 坐标转换： 将食指在窗口坐标转换为鼠标在桌面的坐标
-            # 鼠标坐标
+
+
             x3 = np.interp(x1, (frameR, wCam - frameR), (0, wScr))
             y3 = np.interp(y1, (frameR, hCam - frameR), (0, hScr))
             print(x3, y3)
@@ -55,14 +59,14 @@ while True:
                 cv2.circle(img, (x1, y1), 15, (255, 0, 255), cv2.FILLED)
                 plocX, plocY = clocX, clocY
 
-        # 5. 若是食指和中指都伸出 则检测指头距离 距离够短则对应鼠标点击'NoneType' object has no attribute 'Label'
-        if (fingers[1] and fingers[2] == True) and (fingers[0] == False) and (fingers[3] == False) and (fingers[4] == False):
+        ## both index and thumb
+        if (fingers[1] and fingers[0] == True) and (fingers[2] == False) and (fingers[3] == False) and (fingers[4] == False):
             length, img, pointInfo = detector.findDistance(8, 12, img)
             if length < 40:
-                cv2.circle(img, (pointInfo[4], pointInfo[5]),
-                           15, (0, 255, 0), cv2.FILLED)
+                cv2.circle(img, (pointInfo[4], pointInfo[5]), 15, (0, 255, 0), cv2.FILLED)
                 autopy.mouse.click()
 
+        ## key releasing with all fingers up
         if fingers[0] and fingers[1] and fingers[2] and fingers[3] and fingers[4] == True:
             print("release")
             Keyboard.release('d')
@@ -70,36 +74,41 @@ while True:
             Keyboard.release('j')
             Keyboard.release('k')
 
-        #Spider-D
+        # Spider-D
         if (fingers[0] and fingers[1] and fingers[4] == True) and (fingers[2] == False) and (fingers[3] == False):
+            length, img, pointInfo = detector.findDistance(8, 12, img)
             #autopy.key.tap('d')
             Keyboard.press('d')
             print("Spider - d")
+            cv2.circle(img, (x1, y1), 15, (255, 0, 255), cv2.FILLED)
 
-        #Gun-F
+        # Gun-F
         if (fingers[0] and fingers[1] and fingers[2] == True) and (fingers[3] == False) and (fingers[4] == False):
             #autopy.key.tap('f')
             Keyboard.press('f')
             print("Gun - f")
+            cv2.circle(img, (x1, y1), 15, (255, 0, 255), cv2.FILLED)
 
-        #Phone-J
+        # Phone-J
         if (fingers[0] and fingers[4] == True) and (fingers[1] == False) and (fingers[2] == False) and (fingers[3] == False):
             #autopy.key.tap('j')
             Keyboard.press('j')
             print("Phone - j")
+            cv2.circle(img, (fx1, fy1), 15, (255, 0, 255), cv2.FILLED)
 
-        #Trident-K
+        # Trident-K
         if (fingers[1] and fingers[2] and fingers[3] == True) and (fingers[4] == False) and (fingers[0] == False):
             #autopy.key.tap('k')
             Keyboard.press('k')
-
             print("Trident - k")
+            cv2.circle(img, (x1, y1), 15, (255, 0, 255), cv2.FILLED)
 
         if(fingers[2] == True) and (fingers[0] == False) and (fingers[1] == False) and (fingers[3] == False) and (fingers[4] == False):
             Keyboard.press(Key.ctrl)
             Keyboard.press(Key.f4)
             Keyboard.release(Key.ctrl)
             Keyboard.release(Key.f4)
+            cv2.circle(img, (x1, y1), 15, (255, 0, 255), cv2.FILLED)
             break;
 
     cTime = time.time()

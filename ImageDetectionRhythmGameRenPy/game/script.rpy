@@ -6,11 +6,12 @@ init python:
     # after adding new songs, please remember to delete the persistent data
 
     rhythm_game_songs = [
-    Song('Isolation', 'audio/Isolation.mp3', 'audio/Isolation.beatmap.txt'),
-    Song('Positivity', 'audio/Positivity.mp3', 'audio/Positivity.beatmap.txt'),
-    Song('Pearlescent', 'audio/Pearlescent.mp3', 'audio/Pearlescent.beatmap.txt'),
-    Song('Pearlescent - trimmed', 'audio/Pearlescent - trimmed.mp3', 'audio/Pearlescent - trimmed.beatmap.txt'), # 22 sec, easy to test 
-    Song('Thoughts', 'audio/Thoughts.mp3', 'audio/Thoughts.beatmap.txt')
+        Song('Isolation', 'audio/Isolation.mp3', 'audio/Isolation.beatmap.txt'),
+        Song('Positivity', 'audio/Positivity.mp3', 'audio/Positivity.beatmap.txt'),
+        Song('Pearlescent', 'audio/Pearlescent.mp3', 'audio/Pearlescent.beatmap.txt'),
+        Song('Pearlescent - trimmed', 'audio/Pearlescent - trimmed.mp3', 'audio/Pearlescent - trimmed.beatmap.txt'), # 22 sec, easy to test 
+        Song('Thoughts', 'audio/Thoughts.mp3', 'audio/Thoughts.beatmap.txt'),
+        Song('RickRoll', 'audio/RickRoll.mp3', 'audio/RickRoll.beatmap.txt')
     ]
 
     # # init

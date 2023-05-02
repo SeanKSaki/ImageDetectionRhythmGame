@@ -2,9 +2,9 @@
 errors listed below, and try again.
 
 
-File "game/script.rpy", line 32: Line is indented, but the preceding scene statement statement does not expect a block. Please check this line's indentation.
-    zoom 0.5
-    ^
+File "game/00-renpythm/rhythm_game_displayable.rpy", line 99: expected ':' not found.
+    else
+        ^
 
 Ren'Py Version: Ren'Py 8.0.3.22090809
-Mon May  1 18:01:18 2023
+Mon May  1 18:50:48 2023
