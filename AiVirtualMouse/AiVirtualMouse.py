@@ -60,9 +60,10 @@ while True:
                 plocX, plocY = clocX, clocY
 
         ## both index and thumb
-        if (fingers[1] and fingers[2] == True) and (fingers[1] == False) and (fingers[3] == False) and (fingers[4] == False):
+        if (fingers[1] and fingers[2] == True) and (fingers[0] == False) and (fingers[3] == False) and (fingers[4] == False):
             length, img, pointInfo = detector.findDistance(8, 12, img)
-            if length < 40:
+            print("Mouse")
+            if length < 60:
                 cv2.circle(img, (pointInfo[4], pointInfo[5]), 15, (0, 255, 0), cv2.FILLED)
                 autopy.mouse.click()
 
